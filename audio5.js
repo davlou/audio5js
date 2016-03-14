@@ -1011,7 +1011,40 @@
      * Audio error event handler
      */
     onError: function () {
-      var error = new AudioError('Audio Error. Failed to Load Audio');
+      var error = new AudioError('Audio Error. Failed to Load Audio.');
+
+      var error_code,
+      error_code_message;
+
+      if (arguments[0] && arguments[0].target && arguments[0].target.error && arguments[0].target.error.code) {
+        error_code = arguments[0].target.error.code;
+      }
+
+      switch(error_code) {
+
+        case 1:
+          error_code_message = "Error code: MEDIA_ERR_ABORTED";
+        break;
+
+        case 2:
+          error_code_message = "Error code: MEDIA_ERR_NETWORK";
+        break;
+
+        case 3:
+          error_code_message = "Error code: MEDIA_ERR_DECODE";
+        break;
+
+        case 4:
+          error_code_message = "Error code: MEDIA_ERR_SRC_NOT_SUPPORTED";
+        break;
+
+        default:
+          error_code_message = "Error code: unknown";
+
+      }
+
+      error.message += " " + error_code_message;
+
       if (this.settings.throw_errors) {
         throw error;
       } else {
